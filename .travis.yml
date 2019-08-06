@@ -1,0 +1,12 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t mkharchenko/react-test -f ./client/Dockerfile.dev ./client
+script:
+  - docker run -e CI=true mkharchenko/react-test npm test
+after_success:
+  - docker build -t mkharchenko/multi-client ./client
+  - docker build -t mkharchenko/multi-nginx ./nginx
+  - docker build -t mkharchenko/multi-server ./server
+  - docker build -t mkharchenko/multi-worker ./worker
